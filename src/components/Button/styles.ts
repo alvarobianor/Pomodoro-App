@@ -13,5 +13,7 @@ const buttonVariants = {
 export const StyledButton = styled.button <{ variant: Variant }> `
   padding: 1rem;
   border-radius: 8px;
-  background-color: ${props => buttonVariants[props.variant]};
+  margin-right: 16px;
+  background-color: ${props => props.theme.primary};
+  /* background-color: ${props => buttonVariants[props.variant]}; */
 `;
