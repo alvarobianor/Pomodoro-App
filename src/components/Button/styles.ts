@@ -15,6 +15,7 @@ export const StyledButton = styled.button <{ variant: Variant }> `
   border-radius: 8px;
   margin-right: 16px;
   border: 0;
-  background-color: ${props => props.theme.primary};
+  background-color: ${props => props.theme['green-500']};
   /* background-color: ${props => buttonVariants[props.variant]}; */
+  color: ${props => props.theme.white};
 `;

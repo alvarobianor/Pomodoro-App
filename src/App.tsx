@@ -9,11 +9,13 @@ export function App() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <h1>Álvaro Bianor</h1>
-      <Button />
-      <Button variant="secondary" />
-      <Button variant="success" />
-      <Button variant="warning" />
-      <Button variant="danger" />
+      <Button>
+        Álvaro
+      </Button>
+      <Button variant="secondary">Bianor</Button>
+      <Button variant="success">Sousa</Button>
+      <Button variant="warning">Medeiros</Button>
+      <Button variant="danger">O mais lindo</Button>
 
       <GlobalStyle />
     </ThemeProvider>
