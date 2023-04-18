@@ -1,18 +1,15 @@
-import { Button } from './components/Button'
-
+import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { defaultTheme } from './contexts/themes/default'
+import { Router } from './Router'
 import { GlobalStyle } from './styles/global'
 
 export function App() {
   return (
     <ThemeProvider theme={defaultTheme}>
-      <h1>Álvaro Bianor</h1>
-      <Button>Álvaro</Button>
-      <Button variant="secondary">Bianor</Button>
-      <Button variant="success">Sousa</Button>
-      <Button variant="warning">Medeiros</Button>
-      <Button variant="danger">O mais lindo</Button>
+      <BrowserRouter>
+        <Router />
+      </BrowserRouter>
 
       <GlobalStyle />
     </ThemeProvider>
