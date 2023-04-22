@@ -12,7 +12,7 @@ export const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3.5rem;
+  gap: 2.5rem;
 `
 
 export const TaskContainer = styled.div`
@@ -47,4 +47,26 @@ export const Separator = styled.div`
   overflow: hidden;
   display: flex;
   justify-content: center;
+`
+
+export const CountdownButton = styled.button`
+  width: 100%;
+  padding: 1rem 0;
+  border: 0;
+  border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  background: ${(props) => props.theme['green-500']};
+  color: ${(props) => props.theme['gray-100']};
+
+  &:hover {
+    background: ${(props) => props.theme['green-700']};
+  }
 `
