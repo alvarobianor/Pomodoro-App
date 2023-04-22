@@ -1,20 +1,21 @@
 import styled from 'styled-components'
 
 export const HomeContainer = styled.main`
+  display: flex;
+  flex-direction: column;
   flex: 1;
+  align-items: center;
+  justify-content: center;
+`
+
+export const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3.5rem;
-  }
+  gap: 3.5rem;
 `
 
-export const FormContainer = styled.div`
+export const TaskContainer = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
