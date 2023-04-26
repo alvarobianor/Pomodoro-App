@@ -42,19 +42,28 @@ export function Home() {
 
   const [cycles, setCycles] = useState<Cycle[]>([])
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
+  // State to manager the decrement of seconds, the rate of decrement is 1 second
   const [amountSecondsPassed, setAmountSecondsPassed] = useState<number>(0)
 
   const task = watch('task')
   const isDisabledTask = !task
 
+  // Get tha all informations about the active cycle
   const activeCycle = cycles.find((item) => item.id === activeCycleId)
 
+  // Calculate the total of seconds of the cycle
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
+
+  // If has a active cycle, calculate the current second of the cycle
   const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0
 
+  // Calculates only the amount of minutes this cycle has
   const minutesAmount = Math.floor(currentSeconds / 60)
+
+  // Calculates only the rest of seconds this cycle has
   const secondsAmount = currentSeconds % 60
 
+  // Transform and format to the correct format the minutes and seconds to show on display
   const minutes = String(minutesAmount).padStart(2, '0')
   const seconds = String(secondsAmount).padStart(2, '0')
 
