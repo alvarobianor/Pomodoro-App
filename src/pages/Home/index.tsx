@@ -1,6 +1,7 @@
 import { Play } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { differenceInSeconds } from 'date-fns'
 import * as zod from 'zod'
 
 import {
@@ -13,7 +14,7 @@ import {
   TaskInput,
   MinutesAmountInput,
 } from './styles'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const newCicleFormValidationSchema = zod.object({
   task: zod.string().min(1, 'Informe a tarefa.'),
@@ -29,6 +30,7 @@ type Cycle = {
   id: string
   task: string
   minutesAmount: number
+  startdate: Date
 }
 
 export function Home() {
@@ -51,6 +53,18 @@ export function Home() {
   // Get tha all informations about the active cycle
   const activeCycle = cycles.find((item) => item.id === activeCycleId)
 
+  useEffect(() => {
+    if (activeCycle) {
+      const intervalId = setInterval(() => {
+        setAmountSecondsPassed(
+          differenceInSeconds(new Date(), activeCycle.startdate),
+        )
+      }, 1000)
+
+      return () => clearInterval(intervalId)
+    }
+  }, [activeCycle])
+
   // Calculate the total of seconds of the cycle
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
 
@@ -72,6 +86,7 @@ export function Home() {
       id: String(new Date().getTime()),
       task: data.task,
       minutesAmount: data.minutesAmount,
+      startdate: new Date(),
     }
 
     setCycles((state) => [...state, newCycle])
