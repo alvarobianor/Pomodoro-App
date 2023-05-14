@@ -6,13 +6,13 @@ import * as zod from 'zod'
 
 import { useEffect, useState } from 'react'
 import {
-  StartCountdownButton,
-  StopCountdownButton,
   CountdownContainer,
   FormContainer,
   HomeContainer,
   MinutesAmountInput,
   Separator,
+  StartCountdownButton,
+  StopCountdownButton,
   TaskContainer,
   TaskInput,
 } from './styles'
