@@ -33,6 +33,7 @@ type Cycle = {
   minutesAmount: number
   startdate: Date
   interruptedDate?: Date
+  finishedDate?: Date
 }
 
 export function Home() {
@@ -63,16 +64,32 @@ export function Home() {
 
     if (activeCycle) {
       intervalId = setInterval(() => {
-        if (amountSecondsPassed < totalSeconds)
-          setAmountSecondsPassed(
-            differenceInSeconds(new Date(), activeCycle.startdate),
+        const secondsOfCicle = differenceInSeconds(
+          new Date(),
+          activeCycle.startdate,
+        )
+        if (amountSecondsPassed >= totalSeconds) {
+          setCycles((state) =>
+            state.map((item) => {
+              if (item.id === activeCycleId) {
+                return { ...item, finishedDate: new Date() }
+              } else {
+                return item
+              }
+            }),
           )
+
+          setActiveCycleId(null)
+          clearInterval(intervalId)
+        } else {
+          setAmountSecondsPassed(secondsOfCicle)
+        }
       }, 1000)
     }
     return () => {
       clearInterval(intervalId)
     }
-  }, [activeCycle, amountSecondsPassed, totalSeconds])
+  }, [activeCycle, activeCycleId, amountSecondsPassed, totalSeconds])
 
   // If has a active cycle, calculate the current second of the cycle
   const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0
@@ -110,8 +127,8 @@ export function Home() {
   }
 
   function handleInterruptCycle() {
-    setCycles(
-      cycles.map((item) => {
+    setCycles((state) =>
+      state.map((item) => {
         if (item.id === activeCycleId) {
           return { ...item, interruptedDate: new Date() }
         } else {
