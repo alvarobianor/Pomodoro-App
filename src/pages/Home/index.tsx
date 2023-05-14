@@ -110,8 +110,6 @@ export function Home() {
   }
 
   function handleInterruptCycle() {
-    setActiveCycleId(null)
-
     setCycles(
       cycles.map((item) => {
         if (item.id === activeCycleId) {
@@ -121,6 +119,8 @@ export function Home() {
         }
       }),
     )
+
+    setActiveCycleId(null)
   }
 
   return (
