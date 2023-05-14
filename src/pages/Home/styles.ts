@@ -67,7 +67,7 @@ export const BaseButton = styled.button`
 
   &:disabled {
     opacity: 0.7;
-    cursor: not - allowed;
+    cursor: not-allowed;
   }
 `
 

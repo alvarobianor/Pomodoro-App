@@ -32,6 +32,7 @@ type Cycle = {
   task: string
   minutesAmount: number
   startdate: Date
+  interruptedDate?: Date
 }
 
 export function Home() {
@@ -54,22 +55,24 @@ export function Home() {
   const task = watch('task')
   const isDisabledTask = !task && !activeCycleId
 
+  // Calculate the total of seconds of the cycle
+  const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
+
   useEffect(() => {
     let intervalId: number
+
     if (activeCycle) {
       intervalId = setInterval(() => {
-        setAmountSecondsPassed(
-          differenceInSeconds(new Date(), activeCycle.startdate),
-        )
+        if (amountSecondsPassed < totalSeconds)
+          setAmountSecondsPassed(
+            differenceInSeconds(new Date(), activeCycle.startdate),
+          )
       }, 1000)
     }
     return () => {
       clearInterval(intervalId)
     }
-  }, [activeCycle])
-
-  // Calculate the total of seconds of the cycle
-  const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
+  }, [activeCycle, amountSecondsPassed, totalSeconds])
 
   // If has a active cycle, calculate the current second of the cycle
   const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0
@@ -87,6 +90,8 @@ export function Home() {
   useEffect(() => {
     if (activeCycle) {
       document.title = `${minutes}:${seconds}`
+    } else {
+      document.title = 'Pomodoro App'
     }
   }, [activeCycle, minutes, seconds])
 
@@ -104,6 +109,20 @@ export function Home() {
     reset()
   }
 
+  function handleInterruptCycle() {
+    setActiveCycleId(null)
+
+    setCycles(
+      cycles.map((item) => {
+        if (item.id === activeCycleId) {
+          return { ...item, interruptedDate: new Date() }
+        } else {
+          return item
+        }
+      }),
+    )
+  }
+
   return (
     <HomeContainer>
       <FormContainer onSubmit={handleSubmit(handleCreateNewCicle)}>
@@ -113,6 +132,7 @@ export function Home() {
             id="task"
             list="task-suggestions"
             placeholder="Dê um nome para o seu projeto"
+            disabled={!!activeCycleId}
             {...register('task')}
           />
 
@@ -131,9 +151,10 @@ export function Home() {
             type="number"
             id="minutesAmount"
             placeholder="00"
-            step={5}
+            step={1}
             min={0}
             max={90}
+            disabled={!!activeCycleId}
             {...register('minutesAmount', { valueAsNumber: true })}
           />
 
@@ -153,7 +174,11 @@ export function Home() {
             <Play size={24} /> Começar
           </StartCountdownButton>
         ) : (
-          <StopCountdownButton disabled={isDisabledTask} type="submit">
+          <StopCountdownButton
+            disabled={isDisabledTask}
+            type="button"
+            onClick={handleInterruptCycle}
+          >
             <HandPalm size={24} /> Interromper
           </StopCountdownButton>
         )}
