@@ -1,20 +1,21 @@
-import { Play } from 'phosphor-react'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { differenceInSeconds } from 'date-fns'
+import { HandPalm, Play } from 'phosphor-react'
+import { useForm } from 'react-hook-form'
 import * as zod from 'zod'
 
+import { useEffect, useState } from 'react'
 import {
+  StartCountdownButton,
+  StopCountdownButton,
   CountdownContainer,
   FormContainer,
   HomeContainer,
+  MinutesAmountInput,
   Separator,
-  CountdownButton,
   TaskContainer,
   TaskInput,
-  MinutesAmountInput,
 } from './styles'
-import { useEffect, useState } from 'react'
 
 const newCicleFormValidationSchema = zod.object({
   task: zod.string().min(1, 'Informe a tarefa.'),
@@ -47,11 +48,11 @@ export function Home() {
   // State to manager the decrement of seconds, the rate of decrement is 1 second
   const [amountSecondsPassed, setAmountSecondsPassed] = useState<number>(0)
 
-  const task = watch('task')
-  const isDisabledTask = !task
-
   // Get tha all informations about the active cycle
   const activeCycle = cycles.find((item) => item.id === activeCycleId)
+
+  const task = watch('task')
+  const isDisabledTask = !task && !activeCycleId
 
   useEffect(() => {
     let intervalId: number
@@ -147,10 +148,15 @@ export function Home() {
           <span>{seconds[1]}</span>
         </CountdownContainer>
 
-        <CountdownButton disabled={isDisabledTask} type="submit">
-          <Play size={24} />
-          Começar
-        </CountdownButton>
+        {!activeCycle ? (
+          <StartCountdownButton disabled={isDisabledTask} type="submit">
+            <Play size={24} /> Começar
+          </StartCountdownButton>
+        ) : (
+          <StopCountdownButton disabled={isDisabledTask} type="submit">
+            <HandPalm size={24} /> Interromper
+          </StopCountdownButton>
+        )}
       </FormContainer>
     </HomeContainer>
   )

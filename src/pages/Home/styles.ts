@@ -49,7 +49,7 @@ export const Separator = styled.div`
   justify-content: center;
 `
 
-export const CountdownButton = styled.button`
+export const BaseButton = styled.button`
   width: 100%;
   padding: 1rem 0;
   border: 0;
@@ -63,40 +63,52 @@ export const CountdownButton = styled.button`
 
   cursor: pointer;
 
-  background: ${(props) => props.theme['green-500']};
   color: ${(props) => props.theme['gray-100']};
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not - allowed;
+  }
+`
+
+export const StartCountdownButton = styled(BaseButton)`
+  background: ${(props) => props.theme['green-500']};
 
   &:not(:disabled):hover {
     background: ${(props) => props.theme['green-700']};
   }
+`
 
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
+export const StopCountdownButton = styled(BaseButton)`
+  background: ${(props) => props.theme['red-500']};
+
+  &:not(:disabled):hover {
+    background: ${(props) => props.theme['red-700']};
   }
 `
+
 const BaseInput = styled.input`
-  background: transparent;
-  height: 2.5rem;
-  border: 0;
-  border-bottom: 2px solid ${(props) => props.theme['gray-500']};
-  font-weight: bold;
-  font-size: 1.125rem;
-  padding: 0 0.5rem;
-  color: ${(props) => props.theme['gray-100']};
+background: transparent;
+height: 2.5rem;
+border: 0;
+border - bottom: 2px solid ${(props) => props.theme['gray-500']};
+font - weight: bold;
+font - size: 1.125rem;
+padding: 0 0.5rem;
+color: ${(props) => props.theme['gray-100']};
   &:focus {
-    box-shadow: none;
-    border-color: ${(props) => props.theme['green-500']};
-  }
+  box - shadow: none;
+  border - color: ${(props) => props.theme['green-500']};
+}
   &::placeholder {
-    color: ${(props) => props.theme['gray-500']};
-  }
+  color: ${(props) => props.theme['gray-500']};
+}
 `
 
 export const TaskInput = styled(BaseInput)`
   flex: 1;
 
-  &::-webkit-calendar-picker-indicator {
+  &:: -webkit - calendar - picker - indicator {
     display: none !important;
   }
 `
