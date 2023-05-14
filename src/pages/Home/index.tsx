@@ -5,15 +5,14 @@ import { useForm } from 'react-hook-form'
 import * as zod from 'zod'
 
 import { useEffect, useState } from 'react'
+import { Countdown } from '../../components/Countdown'
+import { NewCycleform } from '../../components/NewCyleForm'
 import {
-  CountdownContainer,
   FormContainer,
   HomeContainer,
-  Separator,
   StartCountdownButton,
   StopCountdownButton,
 } from './styles'
-import { NewCycleform } from '../../components/NewCyleForm'
 
 const newCicleFormValidationSchema = zod.object({
   task: zod.string().min(1, 'Informe a tarefa.'),
@@ -143,13 +142,7 @@ export function Home() {
       <FormContainer onSubmit={handleSubmit(handleCreateNewCicle)}>
         <NewCycleform activeCycleId={activeCycleId} register={register} />
 
-        <CountdownContainer>
-          <span>{minutes[0]}</span>
-          <span>{minutes[1]}</span>
-          <Separator>:</Separator>
-          <span>{seconds[0]}</span>
-          <span>{seconds[1]}</span>
-        </CountdownContainer>
+        <Countdown minutes={minutes} seconds={seconds} />
 
         {!activeCycle ? (
           <StartCountdownButton disabled={isDisabledTask} type="submit">
