@@ -4,7 +4,7 @@ import { HandPalm, Play } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import * as zod from 'zod'
 
-import { useEffect, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import { Countdown } from '../../components/Countdown'
 import { NewCycleform } from '../../components/NewCyleForm'
 import {
@@ -32,6 +32,12 @@ type Cycle = {
   interruptedDate?: Date
   finishedDate?: Date
 }
+
+type CyclesContext = {
+  activeCycle: Cycle | undefined
+}
+
+export const CycleContext = createContext({} as CyclesContext)
 
 export function Home() {
   const { register, handleSubmit, watch, reset } = useForm<NewCicleFormData>({
@@ -140,9 +146,11 @@ export function Home() {
   return (
     <HomeContainer>
       <FormContainer onSubmit={handleSubmit(handleCreateNewCicle)}>
-        <NewCycleform activeCycleId={activeCycleId} register={register} />
+        <CycleContext.Provider value={{ activeCycle }}>
+          <NewCycleform activeCycleId={activeCycleId} register={register} />
 
-        <Countdown minutes={minutes} seconds={seconds} />
+          <Countdown minutes={minutes} seconds={seconds} />
+        </CycleContext.Provider>
 
         {!activeCycle ? (
           <StartCountdownButton disabled={isDisabledTask} type="submit">
