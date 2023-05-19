@@ -38,8 +38,15 @@ export function Countdown() {
     return () => {
       clearInterval(intervalId)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeCycle, activeCycleId, amountSecondsPassed, totalSeconds])
+  }, [
+    activeCycle,
+    activeCycleId,
+    amountSecondsPassed,
+    maskCycleAsFinished,
+    totalSeconds,
+    updateActiveCycleId,
+    updateAmountSecondsPassed,
+  ])
 
   // If has a active cycle, calculate the current second of the cycle
   const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0
