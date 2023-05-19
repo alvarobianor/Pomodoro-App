@@ -1,10 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { differenceInSeconds } from 'date-fns'
 import { HandPalm, Play } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import * as zod from 'zod'
 
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useState } from 'react'
 import { Countdown } from '../../components/Countdown'
 import { NewCycleform } from '../../components/NewCyleForm'
 import {
@@ -35,18 +34,25 @@ type Cycle = {
 
 type CyclesContext = {
   activeCycle: Cycle | undefined
+  amountSecondsPassed: number
+  activeCycleId: string | null
+  updateActiveCycleId: (value?: string) => void
+  updateAmountSecondsPassed: (value: number) => void
+  maskCycleAsFinished: () => void
 }
 
 export const CycleContext = createContext({} as CyclesContext)
 
 export function Home() {
-  const { register, handleSubmit, watch, reset } = useForm<NewCicleFormData>({
+  const useFormCycle = useForm<NewCicleFormData>({
     resolver: zodResolver(newCicleFormValidationSchema),
     defaultValues: {
       task: '',
       minutesAmount: 0,
     },
   })
+
+  const { register, handleSubmit, watch, reset } = useFormCycle
 
   const [cycles, setCycles] = useState<Cycle[]>([])
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
@@ -59,61 +65,25 @@ export function Home() {
   const task = watch('task')
   const isDisabledTask = !task && !activeCycleId
 
-  // Calculate the total of seconds of the cycle
-  const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
+  function updateActiveCycleId(value: string | null = null) {
+    setActiveCycleId(value)
+  }
 
-  useEffect(() => {
-    let intervalId: number
+  function updateAmountSecondsPassed(value: number) {
+    setAmountSecondsPassed(value)
+  }
 
-    if (activeCycle) {
-      intervalId = setInterval(() => {
-        const secondsOfCicle = differenceInSeconds(
-          new Date(),
-          activeCycle.startdate,
-        )
-        if (amountSecondsPassed >= totalSeconds) {
-          setCycles((state) =>
-            state.map((item) => {
-              if (item.id === activeCycleId) {
-                return { ...item, finishedDate: new Date() }
-              } else {
-                return item
-              }
-            }),
-          )
-
-          setActiveCycleId(null)
-          clearInterval(intervalId)
+  function maskCycleAsFinished() {
+    setCycles((state) =>
+      state.map((item) => {
+        if (item.id === activeCycleId) {
+          return { ...item, finishedDate: new Date() }
         } else {
-          setAmountSecondsPassed(secondsOfCicle)
+          return item
         }
-      }, 1000)
-    }
-    return () => {
-      clearInterval(intervalId)
-    }
-  }, [activeCycle, activeCycleId, amountSecondsPassed, totalSeconds])
-
-  // If has a active cycle, calculate the current second of the cycle
-  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0
-
-  // Calculates only the amount of minutes this cycle has
-  const minutesAmount = Math.floor(currentSeconds / 60)
-
-  // Calculates only the rest of seconds this cycle has
-  const secondsAmount = currentSeconds % 60
-
-  // Transform and format to the correct format the minutes and seconds to show on display
-  const minutes = String(minutesAmount).padStart(2, '0')
-  const seconds = String(secondsAmount).padStart(2, '0')
-
-  useEffect(() => {
-    if (activeCycle) {
-      document.title = `${minutes}:${seconds}`
-    } else {
-      document.title = 'Pomodoro App'
-    }
-  }, [activeCycle, minutes, seconds])
+      }),
+    )
+  }
 
   function handleCreateNewCicle(data: NewCicleFormData) {
     const newCycle: Cycle = {
@@ -146,10 +116,19 @@ export function Home() {
   return (
     <HomeContainer>
       <FormContainer onSubmit={handleSubmit(handleCreateNewCicle)}>
-        <CycleContext.Provider value={{ activeCycle }}>
+        <CycleContext.Provider
+          value={{
+            activeCycle,
+            amountSecondsPassed,
+            activeCycleId,
+            updateActiveCycleId,
+            updateAmountSecondsPassed,
+            maskCycleAsFinished,
+          }}
+        >
           <NewCycleform activeCycleId={activeCycleId} register={register} />
 
-          <Countdown minutes={minutes} seconds={seconds} />
+          <Countdown />
         </CycleContext.Provider>
 
         {!activeCycle ? (
