@@ -44,7 +44,7 @@ type CyclesContext = {
 export const CycleContext = createContext({} as CyclesContext)
 
 export function Home() {
-  const formCycle = useForm<NewCicleFormData>({
+  const newCycleForm = useForm<NewCicleFormData>({
     resolver: zodResolver(newCicleFormValidationSchema),
     defaultValues: {
       task: '',
@@ -52,7 +52,7 @@ export function Home() {
     },
   })
 
-  const { handleSubmit, watch, reset } = formCycle
+  const { handleSubmit, watch, reset } = newCycleForm
 
   const [cycles, setCycles] = useState<Cycle[]>([])
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
@@ -126,7 +126,7 @@ export function Home() {
             maskCycleAsFinished,
           }}
         >
-          <FormProvider {...formCycle}>
+          <FormProvider {...newCycleForm}>
             <NewCycleform />
           </FormProvider>
 
