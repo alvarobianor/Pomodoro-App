@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { HandPalm, Play } from 'phosphor-react'
-import { useForm } from 'react-hook-form'
+import { useForm, FormProvider } from 'react-hook-form'
 import * as zod from 'zod'
 
 import { createContext, useState } from 'react'
@@ -44,7 +44,7 @@ type CyclesContext = {
 export const CycleContext = createContext({} as CyclesContext)
 
 export function Home() {
-  const useFormCycle = useForm<NewCicleFormData>({
+  const formCycle = useForm<NewCicleFormData>({
     resolver: zodResolver(newCicleFormValidationSchema),
     defaultValues: {
       task: '',
@@ -52,7 +52,7 @@ export function Home() {
     },
   })
 
-  const { register, handleSubmit, watch, reset } = useFormCycle
+  const { handleSubmit, watch, reset } = formCycle
 
   const [cycles, setCycles] = useState<Cycle[]>([])
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
@@ -126,7 +126,9 @@ export function Home() {
             maskCycleAsFinished,
           }}
         >
-          <NewCycleform activeCycleId={activeCycleId} register={register} />
+          <FormProvider {...formCycle}>
+            <NewCycleform />
+          </FormProvider>
 
           <Countdown />
         </CycleContext.Provider>
