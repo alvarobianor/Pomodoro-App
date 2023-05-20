@@ -25,6 +25,10 @@ type CyclesContext = {
   createNewCicle: (data: NewCicleFormData) => void
   interruptCycle: () => void
 }
+type CycleState = {
+  cycles: Cycle[]
+  activeCycleId: string | null
+}
 
 type Props = {
   children: ReactNode
@@ -33,36 +37,57 @@ type Props = {
 export const CycleContext = createContext({} as CyclesContext)
 
 export function CyclesContextProvider({ children }: Props) {
-  const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
-
-  const [cycles, dispatch] = useReducer((state: Cycle[], action: any) => {
-    switch (action.type) {
-      case 'ADD_NEW_CYCLE': {
-        return [...state, action.payload.newCycle]
-      }
-      case 'INTERRUPT_CURRENT_CYCLE': {
-        return state.map((item) => {
-          if (item.id === activeCycleId) {
-            return { ...item, interruptedDate: new Date() }
-          } else {
-            return item
+  const [cycleState, dispatch] = useReducer(
+    (state: CycleState, action: any) => {
+      switch (action.type) {
+        case 'ADD_NEW_CYCLE': {
+          return {
+            ...state,
+            cycles: [...state.cycles, action.payload.newCycle],
+            activeCycleId: action.payload.newCycle.id,
           }
-        })
-      }
-      case 'MARK_CURRENT_CYCLE_AS_FINISHED': {
-        return state.map((item) => {
-          if (item.id === activeCycleId) {
-            return { ...item, finishedDate: new Date() }
-          } else {
-            return item
+        }
+        case 'INTERRUPT_CURRENT_CYCLE': {
+          return {
+            cycles: state.cycles.map((item) => {
+              if (item.id === action.payload.activeCycleId) {
+                return { ...item, interruptedDate: new Date() }
+              } else {
+                return item
+              }
+            }),
+            activeCycleId: null,
           }
-        })
-      }
+        }
+        case 'MARK_CURRENT_CYCLE_AS_FINISHED': {
+          return {
+            cycles: state.cycles.map((item) => {
+              if (item.id === action.payload.activeCycleId) {
+                return { ...item, finishedDate: new Date() }
+              } else {
+                return item
+              }
+            }),
+            activeCycleId: null,
+          }
+        }
+        case 'UPDATE_ACTIVECYCLEID': {
+          return {
+            ...state,
+            activeCycleId: action.payload.value || null,
+          }
+        }
 
-      default:
-        return state
-    }
-  }, [])
+        default:
+          return state
+      }
+    },
+    {
+      activeCycleId: null,
+      cycles: [],
+    },
+  )
+  const { cycles, activeCycleId } = cycleState
 
   // State to manager the decrement of seconds, the rate of decrement is 1 second
   const [amountSecondsPassed, setAmountSecondsPassed] = useState<number>(0)
@@ -85,7 +110,7 @@ export function CyclesContextProvider({ children }: Props) {
         newCycle,
       },
     })
-    setActiveCycleId(newCycle.id)
+    // setActiveCycleId(newCycle.id)
     setAmountSecondsPassed(0)
     // reset()
   }
@@ -107,7 +132,7 @@ export function CyclesContextProvider({ children }: Props) {
       },
     })
 
-    setActiveCycleId(null)
+    // setActiveCycleId(null)
   }
 
   function maskCycleAsFinished() {
@@ -129,7 +154,14 @@ export function CyclesContextProvider({ children }: Props) {
   }
 
   function updateActiveCycleId(value: string | null = null) {
-    setActiveCycleId(value)
+    // setActiveCycleId(value)
+
+    dispatch({
+      type: 'UPDATE_ACTIVECYCLEID',
+      payload: {
+        value,
+      },
+    })
   }
 
   function updateAmountSecondsPassed(value: number) {
