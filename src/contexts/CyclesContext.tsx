@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState } from 'react'
+import { ReactNode, createContext, useReducer, useState } from 'react'
 
 type Cycle = {
   id: string
@@ -33,8 +33,37 @@ type Props = {
 export const CycleContext = createContext({} as CyclesContext)
 
 export function CyclesContextProvider({ children }: Props) {
-  const [cycles, setCycles] = useState<Cycle[]>([])
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
+
+  const [cycles, dispatch] = useReducer((state: Cycle[], action: any) => {
+    switch (action.type) {
+      case 'ADD_NEW_CYCLE': {
+        return [...state, action.payload.newCycle]
+      }
+      case 'INTERRUPT_CURRENT_CYCLE': {
+        return state.map((item) => {
+          if (item.id === activeCycleId) {
+            return { ...item, interruptedDate: new Date() }
+          } else {
+            return item
+          }
+        })
+      }
+      case 'MARK_CURRENT_CYCLE_AS_FINISHED': {
+        return state.map((item) => {
+          if (item.id === activeCycleId) {
+            return { ...item, finishedDate: new Date() }
+          } else {
+            return item
+          }
+        })
+      }
+
+      default:
+        return state
+    }
+  }, [])
+
   // State to manager the decrement of seconds, the rate of decrement is 1 second
   const [amountSecondsPassed, setAmountSecondsPassed] = useState<number>(0)
 
@@ -49,24 +78,54 @@ export function CyclesContextProvider({ children }: Props) {
       startdate: new Date(),
     }
 
-    setCycles((state) => [...state, newCycle])
+    // setCycles((state) => [...state, newCycle])
+    dispatch({
+      type: 'ADD_NEW_CYCLE',
+      payload: {
+        newCycle,
+      },
+    })
     setActiveCycleId(newCycle.id)
     setAmountSecondsPassed(0)
     // reset()
   }
 
   function interruptCycle() {
-    setCycles((state) =>
-      state.map((item) => {
-        if (item.id === activeCycleId) {
-          return { ...item, interruptedDate: new Date() }
-        } else {
-          return item
-        }
-      }),
-    )
+    // setCycles((state) =>
+    //   state.map((item) => {
+    //     if (item.id === activeCycleId) {
+    //       return { ...item, interruptedDate: new Date() }
+    //     } else {
+    //       return item
+    //     }
+    //   }),
+    // )
+    dispatch({
+      type: 'INTERRUPT_CURRENT_CYCLE',
+      payload: {
+        activeCycleId,
+      },
+    })
 
     setActiveCycleId(null)
+  }
+
+  function maskCycleAsFinished() {
+    dispatch({
+      type: 'MARK_CURRENT_CYCLE_AS_FINISHED',
+      payload: {
+        activeCycleId,
+      },
+    })
+    // setCycles((state) =>
+    //   state.map((item) => {
+    //     if (item.id === activeCycleId) {
+    //       return { ...item, finishedDate: new Date() }
+    //     } else {
+    //       return item
+    //     }
+    //   }),
+    // )
   }
 
   function updateActiveCycleId(value: string | null = null) {
@@ -75,18 +134,6 @@ export function CyclesContextProvider({ children }: Props) {
 
   function updateAmountSecondsPassed(value: number) {
     setAmountSecondsPassed(value)
-  }
-
-  function maskCycleAsFinished() {
-    setCycles((state) =>
-      state.map((item) => {
-        if (item.id === activeCycleId) {
-          return { ...item, finishedDate: new Date() }
-        } else {
-          return item
-        }
-      }),
-    )
   }
 
   return (
