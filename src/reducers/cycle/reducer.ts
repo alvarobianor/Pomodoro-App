@@ -14,13 +14,22 @@ type CycleState = {
   activeCycleId: string | null
 }
 
+// type ActionProps = {
+//   type: ActionTypes
+//   payload: {
+//     newCycle?: Cycle
+//     activeCycleId?: string | null
+//     value?: string | null
+//   }
+// }
+
 export function CyclesReducer(state: CycleState, action: any) {
   switch (action.type) {
     case ActionTypes.ADD_NEW_CYCLE: {
       return {
         ...state,
         cycles: [...state.cycles, action.payload.newCycle],
-        activeCycleId: action.payload.newCycle.id,
+        activeCycleId: action.payload.newCycle?.id,
       }
     }
     case ActionTypes.INTERRUPT_CURRENT_CYCLE: {
