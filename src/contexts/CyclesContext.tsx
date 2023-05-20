@@ -103,36 +103,22 @@ export function CyclesContextProvider({ children }: Props) {
       startdate: new Date(),
     }
 
-    // setCycles((state) => [...state, newCycle])
     dispatch({
       type: 'ADD_NEW_CYCLE',
       payload: {
         newCycle,
       },
     })
-    // setActiveCycleId(newCycle.id)
     setAmountSecondsPassed(0)
-    // reset()
   }
 
   function interruptCycle() {
-    // setCycles((state) =>
-    //   state.map((item) => {
-    //     if (item.id === activeCycleId) {
-    //       return { ...item, interruptedDate: new Date() }
-    //     } else {
-    //       return item
-    //     }
-    //   }),
-    // )
     dispatch({
       type: 'INTERRUPT_CURRENT_CYCLE',
       payload: {
         activeCycleId,
       },
     })
-
-    // setActiveCycleId(null)
   }
 
   function maskCycleAsFinished() {
@@ -142,15 +128,6 @@ export function CyclesContextProvider({ children }: Props) {
         activeCycleId,
       },
     })
-    // setCycles((state) =>
-    //   state.map((item) => {
-    //     if (item.id === activeCycleId) {
-    //       return { ...item, finishedDate: new Date() }
-    //     } else {
-    //       return item
-    //     }
-    //   }),
-    // )
   }
 
   function updateActiveCycleId(value: string | null = null) {
