@@ -131,8 +131,6 @@ export function CyclesContextProvider({ children }: Props) {
   }
 
   function updateActiveCycleId(value: string | null = null) {
-    // setActiveCycleId(value)
-
     dispatch({
       type: 'UPDATE_ACTIVECYCLEID',
       payload: {
