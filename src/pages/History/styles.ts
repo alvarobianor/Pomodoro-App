@@ -2,7 +2,6 @@ import styled from 'styled-components'
 
 export const HistoryContainer = styled.main`
   flex: 1;
-  /* padding: 3.5rem; */
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -20,8 +19,13 @@ export const HistoryList = styled.div`
   margin-top: 2rem;
   table {
     width: 100%;
-    border-collapse: collapse;
     min-width: 600px;
+    border-collapse: collapse;
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
     th {
       background-color: ${(props) => props.theme['gray-600']};
       padding: 1rem;
@@ -37,6 +41,10 @@ export const HistoryList = styled.div`
         border-top-right-radius: 8px;
         padding-right: 1.5rem;
       }
+    }
+    tr {
+      position: sticky;
+      top: 0;
     }
     td {
       background-color: ${(props) => props.theme['gray-700']};
