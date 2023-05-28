@@ -19,7 +19,7 @@ const newCicleFormValidationSchema = zod.object({
   minutesAmount: zod
     .number()
     .min(1, 'O mínimo é de 1 minuto.')
-    .max(90, 'O máximo são 90 minutos'),
+    .max(120, 'O máximo são 120 minutos'),
 })
 
 export type NewCicleFormData = zod.infer<typeof newCicleFormValidationSchema>
