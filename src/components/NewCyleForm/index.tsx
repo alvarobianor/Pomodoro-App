@@ -35,7 +35,7 @@ export function NewCycleform() {
         placeholder="00"
         step={1}
         min={0}
-        max={120}
+        max={99}
         disabled={!!activeCycleId}
         {...register('minutesAmount', { valueAsNumber: true })}
       />
