@@ -23,7 +23,7 @@ export function Countdown() {
       intervalId = setInterval(() => {
         const secondsOfCicle = differenceInSeconds(
           new Date(),
-          activeCycle.startdate,
+          new Date(activeCycle.startdate),
         )
         if (amountSecondsPassed >= totalSeconds) {
           maskCycleAsFinished()

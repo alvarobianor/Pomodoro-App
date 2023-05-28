@@ -1,4 +1,10 @@
-import { ReactNode, createContext, useReducer, useState } from 'react'
+import {
+  ReactNode,
+  createContext,
+  useEffect,
+  useReducer,
+  useState,
+} from 'react'
 import {
   addnewCycleAction,
   interruptCurrentCycleAction,
@@ -6,6 +12,8 @@ import {
   updateActiveCycleIdAction,
 } from '../reducers/cycle/actions'
 import { Cycle, CyclesReducer } from '../reducers/cycle/reducer'
+import { localStorageKey } from '../utils/constants'
+import { differenceInSeconds } from 'date-fns'
 
 type NewCicleFormData = {
   task: string
@@ -31,17 +39,35 @@ type Props = {
 export const CycleContext = createContext({} as CyclesContext)
 
 export function CyclesContextProvider({ children }: Props) {
-  const [cycleState, dispatch] = useReducer(CyclesReducer, {
-    activeCycleId: null,
-    cycles: [],
-  })
+  const [cycleState, dispatch] = useReducer(
+    CyclesReducer,
+    {
+      activeCycleId: null,
+      cycles: [],
+    },
+    (initialState) => {
+      const storageStateJson = localStorage.getItem(localStorageKey)
+      return storageStateJson ? JSON.parse(storageStateJson) : initialState
+    },
+  )
   const { cycles, activeCycleId } = cycleState
-
-  // State to manager the decrement of seconds, the rate of decrement is 1 second
-  const [amountSecondsPassed, setAmountSecondsPassed] = useState<number>(0)
 
   // Get tha all informations about the active cycle
   const activeCycle = cycles.find((item) => item.id === activeCycleId)
+
+  // State to manager the decrement of seconds, the rate of decrement is 1 second
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState<number>(() => {
+    if (activeCycle) {
+      return differenceInSeconds(new Date(), new Date(activeCycle.startdate))
+    }
+    return 0
+  })
+
+  useEffect(() => {
+    const stateJSON = JSON.stringify(cycleState)
+
+    localStorage.setItem(localStorageKey, stateJSON)
+  }, [cycleState])
 
   function createNewCicle(data: NewCicleFormData) {
     const newCycle: Cycle = {
