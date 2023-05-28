@@ -17,6 +17,22 @@ export const HistoryList = styled.div`
   flex: 1;
   overflow: inherit;
   margin-top: 2rem;
+
+  ::-webkit-scrollbar {
+    width: 0.625rem;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${(props) => props.theme['gray-500']};
+    border-radius: 8px;
+    border: none;
+  }
+
   table {
     width: 100%;
     min-width: 600px;
