@@ -33,7 +33,7 @@ export function Countdown() {
         } else {
           updateAmountSecondsPassed(secondsOfCicle)
         }
-      }, 1000)
+      }, 1000) as unknown as number
     }
     return () => {
       clearInterval(intervalId)
