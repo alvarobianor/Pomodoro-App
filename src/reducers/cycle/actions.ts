@@ -15,6 +15,7 @@ export function addnewCycleAction(newCycle: Cycle) {
     },
   }
 }
+
 export function interruptCurrentCycleAction(activeCycleId: string | null) {
   return {
     type: ActionTypes.INTERRUPT_CURRENT_CYCLE,
@@ -23,6 +24,7 @@ export function interruptCurrentCycleAction(activeCycleId: string | null) {
     },
   }
 }
+
 export function markCurrentCycleAsFinishedAction(activeCycleId: string | null) {
   return {
     type: ActionTypes.MARK_CURRENT_CYCLE_AS_FINISHED,
@@ -31,6 +33,7 @@ export function markCurrentCycleAsFinishedAction(activeCycleId: string | null) {
     },
   }
 }
+
 export function updateActiveCycleIdAction(value: string | null) {
   return {
     type: ActionTypes.UPDATE_ACTIVECYCLEID,
