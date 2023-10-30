@@ -16,7 +16,7 @@ export function addnewCycleAction(newCycle: Cycle) {
   }
 }
 
-export function interruptCurrentCycleAction(activeCycleId: string | null) {
+export function interruptCurrentCycleAction(activeCycleId?: string) {
   return {
     type: ActionTypes.INTERRUPT_CURRENT_CYCLE,
     payload: {
@@ -25,7 +25,7 @@ export function interruptCurrentCycleAction(activeCycleId: string | null) {
   }
 }
 
-export function markCurrentCycleAsFinishedAction(activeCycleId: string | null) {
+export function markCurrentCycleAsFinishedAction(activeCycleId?: string) {
   return {
     type: ActionTypes.MARK_CURRENT_CYCLE_AS_FINISHED,
     payload: {
@@ -34,7 +34,7 @@ export function markCurrentCycleAsFinishedAction(activeCycleId: string | null) {
   }
 }
 
-export function updateActiveCycleIdAction(value: string | null) {
+export function updateActiveCycleIdAction(value?: string) {
   return {
     type: ActionTypes.UPDATE_ACTIVECYCLEID,
     payload: {

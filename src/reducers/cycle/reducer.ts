@@ -12,19 +12,19 @@ export type Cycle = {
 
 type CycleState = {
   cycles: Cycle[]
-  activeCycleId: string | null
+  activeCycleId?: string
 }
 
-// type ActionProps = {
-//   type: ActionTypes
-//   payload: {
-//     newCycle?: Cycle
-//     activeCycleId?: string | null
-//     value?: string | null
-//   }
-// }
+type ActionProps = {
+  type: ActionTypes
+  payload: {
+    newCycle?: Cycle
+    activeCycleId?: string
+    value?: string
+  }
+}
 
-export function cyclesReducer(state: CycleState, action: any) {
+export function cyclesReducer(state: CycleState, action: ActionProps) {
   const currentCycleIndex = state.cycles.findIndex(
     (item) => item.id === state.activeCycleId,
   )
@@ -32,7 +32,7 @@ export function cyclesReducer(state: CycleState, action: any) {
   switch (action.type) {
     case ActionTypes.ADD_NEW_CYCLE: {
       return produce(state, (draft) => {
-        draft.cycles.push(action.payload.newCycle)
+        draft.cycles.push(action.payload.newCycle as Cycle)
         draft.activeCycleId = action.payload.newCycle?.id
       })
     }
@@ -42,7 +42,7 @@ export function cyclesReducer(state: CycleState, action: any) {
 
       return produce(state, (draft) => {
         draft.cycles[currentCycleIndex].interruptedDate = new Date()
-        draft.activeCycleId = null
+        draft.activeCycleId = undefined
       })
     }
 
@@ -51,13 +51,13 @@ export function cyclesReducer(state: CycleState, action: any) {
 
       return produce(state, (draft) => {
         draft.cycles[currentCycleIndex].finishedDate = new Date()
-        draft.activeCycleId = null
+        draft.activeCycleId = undefined
       })
     }
 
     case ActionTypes.UPDATE_ACTIVECYCLEID: {
       return produce(state, (draft) => {
-        draft.activeCycleId = action.payload.value || null
+        draft.activeCycleId = action.payload.value || undefined
       })
     }
 

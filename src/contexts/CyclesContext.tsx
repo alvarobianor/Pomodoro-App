@@ -24,7 +24,7 @@ type CyclesContext = {
   cycles: Cycle[]
   activeCycle: Cycle | undefined
   amountSecondsPassed: number
-  activeCycleId: string | null
+  activeCycleId?: string
   updateActiveCycleId: (value?: string) => void
   updateAmountSecondsPassed: (value: number) => void
   maskCycleAsFinished: () => void
@@ -89,7 +89,7 @@ export function CyclesContextProvider({ children }: Props) {
     dispatch(markCurrentCycleAsFinishedAction(activeCycleId))
   }
 
-  function updateActiveCycleId(value: string | null = null) {
+  function updateActiveCycleId(value?: string) {
     dispatch(updateActiveCycleIdAction(value))
   }
 
