@@ -24,7 +24,7 @@ type CycleState = {
 //   }
 // }
 
-export function CyclesReducer(state: CycleState, action: any) {
+export function cyclesReducer(state: CycleState, action: any) {
   const currentCycleIndex = state.cycles.findIndex(
     (item) => item.id === state.activeCycleId,
   )

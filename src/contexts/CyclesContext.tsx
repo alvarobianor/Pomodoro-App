@@ -11,7 +11,7 @@ import {
   markCurrentCycleAsFinishedAction,
   updateActiveCycleIdAction,
 } from '../reducers/cycle/actions'
-import { Cycle, CyclesReducer } from '../reducers/cycle/reducer'
+import { Cycle, cyclesReducer } from '../reducers/cycle/reducer'
 import { localStorageKey } from '../utils/constants'
 import { differenceInSeconds } from 'date-fns'
 
@@ -40,7 +40,7 @@ export const CycleContext = createContext({} as CyclesContext)
 
 export function CyclesContextProvider({ children }: Props) {
   const [cycleState, dispatch] = useReducer(
-    CyclesReducer,
+    cyclesReducer,
     {
       activeCycleId: null,
       cycles: [],
