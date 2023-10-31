@@ -3,10 +3,9 @@ import { HandPalm, Play } from 'phosphor-react'
 import { FormProvider, useForm } from 'react-hook-form'
 import * as zod from 'zod'
 
-import { useContext } from 'react'
 import { Countdown } from '../../components/Countdown'
 import { NewCycleform } from '../../components/NewCyleForm'
-import { CycleContext } from '../../contexts/CyclesContext'
+import { useCycles } from '../../hooks/useCycles'
 import {
   FormContainer,
   HomeContainer,
@@ -26,7 +25,7 @@ export type NewCicleFormData = zod.infer<typeof newCicleFormValidationSchema>
 
 export function Home() {
   const { activeCycle, activeCycleId, createNewCicle, interruptCycle } =
-    useContext(CycleContext)
+    useCycles()
 
   const newCycleForm = useForm<NewCicleFormData>({
     resolver: zodResolver(newCicleFormValidationSchema),
